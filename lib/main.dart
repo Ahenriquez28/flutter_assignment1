@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: DefaultTabController(
-        length: 4, // Changed from 3 to 4 tabs
+        length: 4, 
         child: _TabsNonScrollableDemo(),
       ),
     );
@@ -47,7 +47,7 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
     super.initState();
     _tabController = TabController(
       initialIndex: 0,
-      length: 4, // Changed from 3 to 4 tabs
+      length: 4, 
       vsync: this,
     );
     _tabController.addListener(() {
@@ -64,8 +64,6 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
     _textController.dispose();
     super.dispose();
   }
-
-  // Function to show Alert Dialog
   void _showAlertDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -119,20 +117,17 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Tab 1: Text Widget with Alert Dialog
+
           _buildTab1(),
           
-          // Tab 2: Image Widget with Text Input
           _buildTab2(),
           
-          // Tab 3: Button Widget
           _buildTab3(),
           
-          // Tab 4: ListView with Card Widgets
           _buildTab4(),
         ],
       ),
-      // Bottom App Bar
+
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue,
         child: Container(
@@ -171,7 +166,7 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
     );
   }
 
-  // Tab 1: Text Widget with Alert Dialog
+
   Widget _buildTab1() {
     return Container(
       color: Colors.red.shade50,
@@ -214,7 +209,7 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
     );
   }
 
-  // Tab 2: Image Widget with Text Input
+
   Widget _buildTab2() {
     return Container(
       color: Colors.green.shade50,
@@ -233,7 +228,6 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
                 ),
               ),
               SizedBox(height: 20),
-              // Image from network
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
@@ -268,7 +262,7 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
                 ),
               ),
               SizedBox(height: 30),
-              // Text Input Field
+
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: TextField(
@@ -313,7 +307,6 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
     );
   }
 
-  // Tab 3: Button Widget
   Widget _buildTab3() {
     return Container(
       color: Colors.blue.shade50,
@@ -354,7 +347,6 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
     );
   }
 
-  // Tab 4: ListView with Card Widgets
   Widget _buildTab4() {
     final List<Map<String, dynamic>> items = [
       {
