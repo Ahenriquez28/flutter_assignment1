@@ -4,7 +4,20 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _themeMode = ThemeMode.system;
+
+  void changeTheme(ThemeMode mode) {
+    setState(() {
+      _themeMode = mode;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,19 +25,42 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
+        scaffoldBackgroundColor: Colors.grey[200],
+        cardTheme: CardThemeData(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        ),
       ),
+      darkTheme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: Colors.grey[900],
+        cardTheme: CardThemeData(
+          elevation: 8,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        ),
+      ),
+      themeMode: _themeMode,
       home: DefaultTabController(
-        length: 4, 
-        child: _TabsNonScrollableDemo(),
+        length: 5,
+        child: _TabsNonScrollableDemo(
+          onThemeChanged: changeTheme,
+          currentThemeMode: _themeMode,
+        ),
       ),
     );
   }
 }
 
 class _TabsNonScrollableDemo extends StatefulWidget {
+  final Function(ThemeMode) onThemeChanged;
+  final ThemeMode currentThemeMode;
+
+  const _TabsNonScrollableDemo({
+    required this.onThemeChanged,
+    required this.currentThemeMode,
+  });
+
   @override
-  __TabsNonScrollableDemoState createState() =>
-      __TabsNonScrollableDemoState();
+  __TabsNonScrollableDemoState createState() => __TabsNonScrollableDemoState();
 }
 
 class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
@@ -47,7 +83,7 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
     super.initState();
     _tabController = TabController(
       initialIndex: 0,
-      length: 4, 
+      length: 5,
       vsync: this,
     );
     _tabController.addListener(() {
@@ -64,6 +100,7 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
     _textController.dispose();
     super.dispose();
   }
+
   void _showAlertDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -95,7 +132,7 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
 
   @override
   Widget build(BuildContext context) {
-    final tabs = ['Tab 1', 'Tab 2', 'Tab 3', 'Tab 4'];
+    final tabs = ['Tab 1', 'Tab 2', 'Tab 3', 'Tab 4', 'Theme'];
 
     return Scaffold(
       appBar: AppBar(
@@ -105,7 +142,7 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
         foregroundColor: Colors.white,
         bottom: TabBar(
           controller: _tabController,
-          isScrollable: false,
+          isScrollable: true,
           indicatorColor: Colors.white,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
@@ -117,17 +154,13 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
       body: TabBarView(
         controller: _tabController,
         children: [
-
           _buildTab1(),
-          
           _buildTab2(),
-          
           _buildTab3(),
-          
           _buildTab4(),
+          _buildTab5(),
         ],
       ),
-
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue,
         child: Container(
@@ -165,7 +198,6 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
       ),
     );
   }
-
 
   Widget _buildTab1() {
     return Container(
@@ -208,7 +240,6 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
       ),
     );
   }
-
 
   Widget _buildTab2() {
     return Container(
@@ -262,7 +293,6 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
                 ),
               ),
               SizedBox(height: 30),
-
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: TextField(
@@ -420,6 +450,130 @@ class __TabsNonScrollableDemoState extends State<_TabsNonScrollableDemo>
             ),
           );
         },
+      ),
+    );
+  }
+
+  // NEW TAB 5: Theme Demo with ALL Part 2 features
+  Widget _buildTab5() {
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            Card(
+              margin: const EdgeInsets.all(20),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    // TASK 1: AnimatedContainer + TASK 3: 500ms duration
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      width: 300,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        // Light mode: Grey, Dark mode: White
+                        color: widget.currentThemeMode == ThemeMode.dark
+                            ? Colors.white
+                            : Colors.grey,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      alignment: Alignment.center,
+                      child: const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          'Mobile App Development Testing',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Text(
+                      'Choose the Theme:',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 20),
+                    // TASK 2: Switch widget + TASK 4: Dynamic icons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.wb_sunny,
+                          color: widget.currentThemeMode == ThemeMode.light
+                              ? Colors.amber
+                              : Colors.grey,
+                          size: 30,
+                        ),
+                        const SizedBox(width: 10),
+                        Switch(
+                          value: widget.currentThemeMode == ThemeMode.dark,
+                          onChanged: (isDark) {
+                            widget.onThemeChanged(
+                                isDark ? ThemeMode.dark : ThemeMode.light);
+                          },
+                          activeColor: Colors.blueGrey,
+                        ),
+                        const SizedBox(width: 10),
+                        Icon(
+                          Icons.nightlight_round,
+                          color: widget.currentThemeMode == ThemeMode.dark
+                              ? Colors.blueGrey
+                              : Colors.grey,
+                          size: 30,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Alternative: Button controls
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () =>
+                              widget.onThemeChanged(ThemeMode.light),
+                          icon: const Icon(Icons.wb_sunny),
+                          label: const Text('Light'),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () =>
+                              widget.onThemeChanged(ThemeMode.dark),
+                          icon: const Icon(Icons.nightlight_round),
+                          label: const Text('Dark'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Current Mode: ${widget.currentThemeMode == ThemeMode.dark ? "Dark" : "Light"}',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
